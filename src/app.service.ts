@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Request } from '@prisma/client';
+import { Prisma, Request, Response } from '@prisma/client';
 import { PrismaService } from './prisma/prisma.service';
 
 @Injectable()
@@ -9,8 +9,19 @@ export class AppService {
     return this.prisma.request.findMany({});
   }
 
-  create(controllerReques: Prisma.RequestCreateInput) {
-    return this.prisma.request.create({ data: controllerReques });
+  async create(controllerRequest: Prisma.RequestCreateInput) {
+    await this.prisma.request.create({ data: controllerRequest });
+    const response = await this.prisma.response.findFirst({});
+    return response.body;
+  }
+
+  async getResponse(): Promise<Response> {
+    return this.prisma.response.findFirst({});
+  }
+
+  async saveResponse(controllerResponse: Prisma.ResponseCreateInput) {
+    await this.prisma.response.deleteMany({});
+    return this.prisma.response.create({ data: controllerResponse });
   }
 
   delete() {

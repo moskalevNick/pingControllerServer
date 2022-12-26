@@ -11,3 +11,8 @@ model Request {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   body Json
 }
+
+model Response {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  body Json
+}

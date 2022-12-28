@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Req } from '@nestjs/common';
+import * as rawbody from 'raw-body';
 import { AppService } from './app.service';
 import { Prisma, Request, Response } from '@prisma/client';
 
@@ -12,8 +13,17 @@ export class AppController {
   }
 
   @Post()
-  create(@Body() controllerRequest: Prisma.RequestCreateInput) {
-    return this.appService.create({ body: controllerRequest });
+  async create(
+    @Body() controllerRequest: Prisma.RequestCreateInput,
+    @Req() req: any,
+  ) {
+    if (req.readable) {
+      const raw = await rawbody(req);
+      const text: any = raw.toString().trim();
+      return this.appService.create({ body: JSON.parse(text) });
+    } else {
+      return this.appService.create({ body: controllerRequest });
+    }
   }
 
   @Delete()
@@ -27,7 +37,7 @@ export class AppController {
   }
 
   @Post('response')
-  saveResoponse(@Body() controllerResponse: Prisma.ResponseCreateInput) {
+  saveResponse(@Body() controllerResponse: Prisma.ResponseCreateInput) {
     return this.appService.saveResponse({ body: controllerResponse });
   }
 }

@@ -9,7 +9,7 @@ datasource db {
 
 model Request {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
-  body Json
+  body String
 }
 
 model Response {

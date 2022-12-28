@@ -20,9 +20,9 @@ export class AppController {
     if (req.readable) {
       const raw = await rawbody(req);
       const text: any = raw.toString().trim();
-      return this.appService.create({ body: JSON.parse(text) });
+      return this.appService.create({ body: text });
     } else {
-      return this.appService.create({ body: controllerRequest });
+      return this.appService.create({ body: controllerRequest.body });
     }
   }
 
